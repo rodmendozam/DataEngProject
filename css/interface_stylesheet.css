@@ -62,3 +62,21 @@
 .margin_top{
 
 }
+
+
+select option:first-child{
+    display:none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
