@@ -1,3 +1,44 @@
+var app_graph = angular.module('myAppGraph', []);
+app_graph.controller('myCtrl', function($scope) {
+    $scope.firstName = "Rodrigo";
+    $scope.visible = null;
+    $scope.alignment = null;
+
+
+    angular.element(document).ready(function () {
+
+        $("#form_content").hide();
+        $("#form_structure").hide();
+        //$("#intro").css("background-color", "yellow");
+        $("#structure_metrics_button").click(function(){
+            $("#form_structure").show();
+            $("#form_content").hide();
+        });
+        $("#content_metrics_button").click(function(){
+            $("#form_structure").hide();
+            $("#form_content").show();
+        });
+
+    });
+
+    $('#distance').on('submit', function(e){
+        e.preventDefault();
+
+        var movie1 = $(this).find('input[name="movie1"]');
+
+        $.getJSON('/distance', {movie1: movie1.val()})
+        .done(function(data){
+          alert(data);})
+        .fail(function(jqxhr, textStatus, error){
+          var err = textStatus + ", " + error;
+          console.log("Request failed: " + err);
+         });
+        
+    });
+
+
+});
+
 var app = angular.module("MyApp", []);
 
 app.controller("PostsCtrl", function($scope, $http) {
@@ -80,3 +121,5 @@ $.ajax(settings).done(function (response) {
   console.log(response);
 });
 * */
+
+
