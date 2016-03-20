@@ -16,28 +16,31 @@
                     <button id="structure_metrics_button" type="button" class="btn btn-default">Structure metrics</button>
             </div>
         </div>
-        <div id="controls" ng-controller="myCtrl">
-            <form role="form" id="distance" class="form-inline">
+        <div id="controls" ng-controller="formController">
+            <form role="form" id="structure_form" class="form-inline">
                 <div id="form_structure" class="form-group">
                     <label for="movie1">Movie1:</label>
                     <input type="text" class="form-control" name="movie1">
                     <label for="movie2">Movie2:</label>
-                    <input type="text" class="form-control" id="movie2">
+                    <input type="text" class="form-control" name="movie2">
                     <button type="submit" class="btn btn-default">Submit</button>
                 </div>
+            </form>
                 <div style="min-height: 20px"></div>
+            <form role="form" id="content_form" class="form-inline">
                 <div id="form_content" class="form-group">
-                    <select class="form-control placeholder">
-                        <option value="">Pick Gender</option>
+                    <select class="form-control placeholder" name="genre_select">
+                        <option value="">Pick Genre</option>
                         <option value="two">Horror</option>
                         <option value="three">Action</option>
                         <option value="four">Drama</option>
                         <option value="five">Comedy</option>
                     </select>
                     <label for="movie1_rating">Movie1:</label>
-                    <input type="text" class="form-control" id="movie1_rating">
+                    <input type="text" class="form-control" name="movie1_rating">
                     <label for="movie2_rating">Movie2:</label>
-                    <input type="text" class="form-control" id="movie2_rating">
+                    <input type="text" class="form-control" name="movie2_rating">
+                    <button type="submit" class="btn btn-default">Submit</button>
                 </div>
             </form>
         </div>

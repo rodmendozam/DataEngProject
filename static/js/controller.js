@@ -1,5 +1,5 @@
 var app_graph = angular.module('myAppGraph', []);
-app_graph.controller('myCtrl', function($scope) {
+app_graph.controller('formController', function($scope) {
     $scope.firstName = "Rodrigo";
     $scope.visible = null;
     $scope.alignment = null;
@@ -21,12 +21,27 @@ app_graph.controller('myCtrl', function($scope) {
 
     });
 
-    $('#distance').on('submit', function(e){
+    $('#structure_form').on('submit', function(e){
         e.preventDefault();
 
         var movie1 = $(this).find('input[name="movie1"]');
 
-        $.getJSON('/distance', {movie1: movie1.val()})
+        $.getJSON('/structure', {movie1: movie1.val()})
+        .done(function(data){
+          alert(data);})
+        .fail(function(jqxhr, textStatus, error){
+          var err = textStatus + ", " + error;
+          console.log("Request failed: " + err);
+         });
+        
+    });
+
+    $('#content_form').on('submit', function(e){
+        e.preventDefault();
+
+        var movie1 = $(this).find('input[name="movie1_rating"]');
+
+        $.getJSON('/content', {movie1_rating: movie1.val()})
         .done(function(data){
           alert(data);})
         .fail(function(jqxhr, textStatus, error){

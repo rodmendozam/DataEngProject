@@ -33,9 +33,15 @@ def distance2():
 def centrality():
   return "Maybe some centrality metric"
 
-@app.route('/distance')
-def distance():
+@app.route('/structure')
+def structure():
 	result = request.args.get('movie1')
+	print result
+  	return json.dumps(result)
+
+@app.route('/content')
+def content():
+	result = request.args.get('movie1_rating')
 	print result
   	return json.dumps(result)
 
