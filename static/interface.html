@@ -22,32 +22,28 @@
                     <label for="selector">Select which metric you would like to see.</label>
                     <select class="form-control placeholder" name="select_metric" id="select_metric">
                         <option value="">Select one option here.</option>
-                        <option value="distance">Temporal Distance</option>
                         <option value="reachability">Reachability</option>
-                        <option value="centrality">Centrality</option>
+                        <option value="centrality">Degree Centrality</option>
                     </select>
+
                     <label for="selector">Select a first movie.</label>
-                    <select class="form-control placeholder" name="first_movie" id="first_movie">
+                    <select class="form-control placeholder"
+                            ng-model="selectedMovie1" 
+                            name = "first_movie"
+                            id = "first_movie"
+                            ng-options="item.title for item in movies1 track by item.id">
                         <option value="">Select one option here.</option>
-                        <option value="who">1</option>
-                        <option value="who">3</option>
-                        <option value="who">5</option>
-                        <option value="who">7</option>
-                        <option value="who">9</option>
                     </select>
+
                     <label for="selector">Select a second movie.</label>
-                    <select class="form-control placeholder" name="second_movie" id="second_movie">
+                    <select class="form-control placeholder"
+                            ng-model="selectedMovie2" 
+                            name = "second_movie"
+                            id = "second_movie"
+                            ng-options="item.title for item in movies2 track by item.id">
                         <option value="">Select one option here.</option>
-                        <option value="who">2</option>
-                        <option value="who">4</option>
-                        <option value="who">6</option>
-                        <option value="who">8</option>
-                        <option value="who">10</option>
                     </select>
-                    <!-- <label for="movie1">Movie1:</label>
-                    <input type="text" class="form-control" name="movie1">
-                    <label for="movie2">Movie2:</label>
-                    <input type="text" class="form-control" name="movie2"> -->
+
                     <button type="submit" class="btn btn-default">Submit</button>
                 </div>
             </form>

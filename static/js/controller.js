@@ -1,5 +1,5 @@
 var app_graph = angular.module('myAppGraph', []);
-app_graph.controller('formController', function($scope) {
+app_graph.controller('formController', function($scope, $http) {
     $scope.firstName = "Rodrigo";
     $scope.visible = null;
     $scope.alignment = null;
@@ -21,17 +21,27 @@ app_graph.controller('formController', function($scope) {
 
     });
 
+    //Form population
+    $scope.selectedMovie1 = null;
+    $scope.selectedMovie2 = null;
+    $scope.movies1 = [];
+    $scope.movies2 = [];
+
+
+    $http({
+            method: 'GET',
+            url: 'static/data/submovies.json'
+        }).success(function (result) {
+        $scope.movies1 = $scope.movies2 = result;
+    });
+
+
     $('#structure_form').on('submit', function(e){
         e.preventDefault();
         var select = "none"
         select = $(this).find('#select_metric').val();
-        var movie1 = $(this).find('#first_movie option:selected').text();
-        console.log(movie1);
-        var movie2 = $(this).find('#second_movie option:selected').text();
-        console.log(movie2);
-        var lengthvar = "2";
-        // var movie1 = $(this).find('input[name="movie1"]');
-        // var movie2 = $(this).find('input[name="movie2"]');
+        var movie1 = $(this).find('#first_movie option:selected').val();
+        var movie2 = $(this).find('#second_movie option:selected').val();
 
         if(select === "distance"){
           $.getJSON('/temporal_distance', {movie1: movie1, movie2: movie2})
@@ -70,13 +80,13 @@ app_graph.controller('formController', function($scope) {
       
       for(var d = 0; d < data.length; d++) {
         dataset = data[d]
+        console.log(dataset);
         var result = [];
         for(var i = 0; i < dataset.length; i++) {
           total = total + dataset[i][1]
           date = new Date(dataset[i][0]*1000);
           result.push([date, total]);
         }
-        console.log(result);
         graphLine(result, "#graph" + (d+1));
       }
       
