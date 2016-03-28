@@ -69,8 +69,12 @@ svg.selectAll(".month")
     .attr("d", monthPath);
 
 
+var url_service = "http://127.0.0.1:5000/timestamps_ratings";
+var url_service_encoded = encodeURI(url_service);
 
-d3.json('http://127.0.0.1:5000/timestamps_ratings', function(error, data) {
+var url_service2 = 'http://127.0.0.1:5000/timestamps_ratings?movie_title=Toy Story (1995)&date_from=19960129&date_to=20160129';
+var url_service_encoded2 = encodeURI(url_service2);
+d3.json(url_service_encoded2, function(error, data) {
     //load values
     var my_dates = data.Date;
     var my_values = data.Comparison_Value;

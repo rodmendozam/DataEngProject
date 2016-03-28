@@ -12,7 +12,7 @@ import random
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import StringIO
-import datetime
+from datetime import datetime
 
 app = Flask(__name__, static_url_path='')
 
@@ -59,27 +59,53 @@ def content():
 @app.route('/timestamps_ratings/')
 @app.route('/timestamps_ratings', methods=['GET'])
 def heatmap_movie():
-    print 'The movie title: {0}'.format('m1')
-    # print request.args.get('movie_name')
-    movie_title = 'Toy Story (1995)'
-    # movie_title = 'Jumanji (1995)'
-    # movie_title = 'Lord of the Rings: The Return of the King, The (2003)'
-    # connection properties and auth
+    def timestamp_to_date(x):
+        return datetime.utcfromtimestamp(
+            int(x)
+        ).strftime('%Y%m%d')
+    def date_to_timestamp(year, month, day):
+        s = "{0}/{1}/{2}".format(day,month,year)
+        return calendar.timegm(datetime.strptime(s, "%d/%m/%Y").timetuple())
+    if request.method == 'GET':
+        movie_title = request.args.get('movie_title')
+        date_from = request.args.get('date_from')
+        date_to = request.args.get('date_to')
+        if movie_title is not None or date_from is not None or date_to is not None:
+            timestamp_date_from = date_to_timestamp(date_from[:4], date_from[4:6], date_from[6:8])
+            timestamp_date_to = date_to_timestamp(date_to[:4], date_to[4:6], date_to[6:8])
+            print 'timestamp_date_from: ', timestamp_date_from
+            print 'timestamp_date_to: ', timestamp_date_to
+            print 'The title is {0}'.format(movie_title)
+            print 'The date_from is {0}'.format(date_from)
+            print 'The date_to is {0}'.format(date_to)
+        else:
+            print 'Missing some parameters'
+            movie_title = 'Toy Story (1995)'
+            timestamp_date_from = 822873600 # 1996 Jan to 1996 Dec
+            timestamp_date_to = 851990400 #1454045658
+    else:
+        movie_title = 'Toy Story (1995)'
+        timestamp_date_from = 822873600 # 1996 Jan to 1996 Dec
+        timestamp_date_to = 851990400 #1454045658
+
+
+
+    #connection to graph
     authenticate("localhost:7474", "neo4j", "dataeng123=")
     graph = Graph("http://localhost:7474/db/data/")
     #query
     cypher = graph.cypher
     results = cypher.execute("MATCH (m:Movie {title:{r1}})<-[e:EDITED]-(u:User) "
-                                "RETURN collect([e.` timestamp`,e.` rating`])", r1=movie_title)
+                             "WHERE e.` timestamp` > {t1} AND e.` timestamp` < {t2} "
+                             "RETURN collect([e.` timestamp`,e.` rating`])", r1=movie_title,
+                                t1= int(timestamp_date_from), t2= int(timestamp_date_to))
+    #Participation of user per day
     try:
         timestamps = results[0]
         #transform
-        def change_to_date_format(x):
-            return datetime.datetime.fromtimestamp(
-                int(x)
-            ).strftime('%Y%m%d')
+
         df = pd.DataFrame(timestamps[0], columns=['Date','Comparison_Value'])
-        df['Date'] = df['Date'].apply(change_to_date_format)
+        df['Date'] = df['Date'].apply(timestamp_to_date)
         df['Comparison_Value'] = df['Comparison_Value'].apply(lambda x: 1)
         df = df.groupby("Date").sum().reset_index()
         output = StringIO.StringIO()

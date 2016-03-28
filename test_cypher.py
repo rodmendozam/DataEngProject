@@ -12,22 +12,42 @@ from matplotlib.figure import Figure
 import StringIO
 
 import json
-import numpy as np
-import pandas as pd
-import datetime
 
-def converter(x):
-    return datetime.datetime.fromtimestamp(
+import pandas as pd
+
+from datetime import datetime
+import time
+import calendar
+
+
+
+
+def timestamp_to_date(x):
+    return datetime.utcfromtimestamp(
         int(x)
     ).strftime('%Y%m%d')
 
+def date_to_timestamp(year, month, day):
+    s = "{0}/{1}/{2}".format(day,month,year)
+    return calendar.timegm(datetime.strptime(s, "%d/%m/%Y").timetuple())
+
+# print timestamp_to_date('1416873600') #  11/25/2014 @ 12:00am (UTC)
+# print timestamp_to_date( date_to_timestamp(2014, 11, 25) ) #from UTC
+
+x = '20141125'
+print x[:4]
+print x[4:6]
+print x[6:8]
+print date_to_timestamp(x[:4], x[4:6], x[6:8])
+
+
 collect_lst = [[820454400, 112], [820454401, 112],[19960103, 223],[19960104, 323],[19960105, 423]]
 df = pd.DataFrame(collect_lst, columns=['Date','Comparison_Value'])
-df['Date'] = df['Date'].apply(converter)
+df['Date'] = df['Date'].apply(timestamp_to_date)
 df['Comparison_Value'] = df['Comparison_Value'].apply(lambda x: 1)
 df = df.groupby("Date").sum().reset_index()
 
-print df
+# print df
 
 # df['Date1'] = df.index
 # df = df[['Date1','Comparison_Value']]
