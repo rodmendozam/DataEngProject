@@ -23,16 +23,44 @@ app_graph.controller('formController', function($scope) {
 
     $('#structure_form').on('submit', function(e){
         e.preventDefault();
+        var select = "none"
+        select = $(this).find('#select_metric').val();
+        var movie1 = $(this).find('#first_movie option:selected').text();
+        console.log(movie1);
+        var movie2 = $(this).find('#second_movie option:selected').text();
+        console.log(movie2);
+        var lengthvar = "2";
+        // var movie1 = $(this).find('input[name="movie1"]');
+        // var movie2 = $(this).find('input[name="movie2"]');
 
-        var movie1 = $(this).find('input[name="movie1"]');
-
-        $.getJSON('/structure', {movie1: movie1.val()})
+        if(select === "distance"){
+          $.getJSON('/temporal_distance', {movie1: movie1, movie2: movie2})
+          .done(function(data){
+            parseDistance(data, movie1, movie2);
+            alert(data);})
+          .fail(function(jqxhr, textStatus, error){
+          var err = textStatus + ", " + error;
+          console.log("Request failed: " + err);
+         });
+        }else if (select === "centrality"){
+          $.getJSON('/centrality', {movie1: movie1, movie2: movie2, length: lengthvar})
+          .done(function(data){
+            alert(data);})
+          .fail(function(jqxhr, textStatus, error){
+          var err = textStatus + ", " + error;
+          console.log("Request failed: " + err);
+         });
+        }else if (select === "reachability"){
+          $.getJSON('/reachability', {movie1: movie1, movie2: movie2})
         .done(function(data){
           alert(data);})
         .fail(function(jqxhr, textStatus, error){
           var err = textStatus + ", " + error;
           console.log("Request failed: " + err);
          });
+        } else {
+          alert("none filled in")
+        }
         
     });
 
