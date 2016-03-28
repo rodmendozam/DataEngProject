@@ -13,6 +13,10 @@
      href="http://tarruda.github.com/bootstrap-datetimepicker/assets/css/bootstrap-datetimepicker.min.css">
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+
+    <!-- Bootstrap Date-Picker Plugin -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
     <style>
 	.calender-map {
       font: 10px sans-serif;
@@ -48,12 +52,18 @@
     <div id="controls" ng-controller="formController">
             <form role="form" id="structure_form" class="form-inline">
                 <div id="form_structure" class="form-group">
-                    <label for="movie">Movie Name:</label>
-                    <input type="text" class="form-control " id="movie_title">
-                    <label for="start_date">Start Date:</label>
-                    <input type="text" class="form-control" id="start_date">
-                    <label for="end_date">End Date:</label>
-                    <input type="text" class="form-control" id="end_date">
+                    <label for="movie_title">Movie Name:</label>
+                    <input type="text" class="form-control " id="movie_title" placeholder="Toy Story (1995)">
+
+                    <label class="control-label" for="start_date">Start Date:</label>
+                    <input class="form-control" id="start_date" name="start_date" placeholder="DD-MM-YYYY" type="text"/>
+
+                    <label class="control-label" for="end_date">Start Date:</label>
+                    <input class="form-control" id="end_date" name="end_date" placeholder="DD-MM-YYYY" type="text"/>
+
+                    <!--<label for="end_date">End Date:</label>-->
+                    <!--<input type="text" class="form-control" id="end_date" placeholder="19960220">-->
+
                     <button id="update_chart" type="button" class="btn btn-default">Update</button>
                 </div>
             </form>
@@ -64,5 +74,6 @@
         <div class="center width80">
         </div>
     </div>
+
 </body>
 </html>

@@ -1,14 +1,45 @@
+//https://formden.com/blog/date-picker
+//
 
 $(function() {
 
-    $('#clear_chart').click(function(){
-
+    var start_date_input=$('input[name="start_date"]'); //our date input has the name "date"
+    var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+    start_date_input.datepicker({
+        format: 'dd-mm-yyyy',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+        startDate: "01/01/1996",
+        endDate: "31/12/2016"
     });
-    $('#update_chart').click(function() {
+    var end_date_input=$('input[name="end_date"]'); //our date input has the name "date"
+    var container2=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+    end_date_input.datepicker({
+        format: 'dd-mm-yyyy',
+        container: container2,
+        todayHighlight: true,
+        autoclose: true,
+        startDate: "01/01/1996",
+        endDate: "31/12/2016"
+    });
 
+    $('#update_chart').click(function() {
         var movie_title_form = $('#movie_title').val(); //Toy Story (1995)
-        var start_date_form = $('#start_date').val(); //
-        var end_date_form = $('#end_date').val(); //
+
+        var start_date_split = start_date_input.val().split("-");
+        var start_date_form = start_date_split[2]+start_date_split[1]+start_date_split[0];
+
+        var end_date_split = end_date_input.val().split("-");
+        var end_date_form = end_date_split[2]+end_date_split[1]+end_date_split[0];
+
+        //var end_date_form = $('#end_date').val();
+
+        console.log('movie title has: ' + movie_title_form);
+        console.log('start date has: ' + start_date_form);
+        console.log('end date has: ' + end_date_form);
+
+
 
 
         $('div.calender-map').empty(); //remove first everything
@@ -16,7 +47,7 @@ $(function() {
         var url_service = 'http://127.0.0.1:5000/timestamps_ratings?movie_title='+ movie_title_form+'' +
                                 '&date_from='+ start_date_form+'' +
                                 '&date_to='+end_date_form+'';
-        console.log(url_service);
+        //console.log(url_service);
         var url_service_encoded = encodeURI(url_service);
 
         var width = 900,
