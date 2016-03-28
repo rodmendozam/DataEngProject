@@ -3,11 +3,14 @@
 <html lang="en">
 <head>
 
-    <title>Calender Map - 10 Steps Tutorial</title>
+    <title>Calender Participation</title>
 
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 
     <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/stylesheet.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" media="screen"
+     href="http://tarruda.github.com/bootstrap-datetimepicker/assets/css/bootstrap-datetimepicker.min.css">
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
     <style>
@@ -37,7 +40,29 @@
     </style>
 </head>
 <body>
-<div class="calender-map"></div>
-<script type="text/javascript" src="js/calendermap.js"></script>
+    <div id="menu">
+        <div class="center width80">
+            <span>Temporal Network Participation</span>
+        </div>
+    </div>
+    <div id="controls" ng-controller="formController">
+            <form role="form" id="structure_form" class="form-inline">
+                <div id="form_structure" class="form-group">
+                    <label for="movie">Movie Name:</label>
+                    <input type="text" class="form-control " id="movie_title">
+                    <label for="start_date">Start Date:</label>
+                    <input type="text" class="form-control" id="start_date">
+                    <label for="end_date">End Date:</label>
+                    <input type="text" class="form-control" id="end_date">
+                    <button id="update_chart" type="button" class="btn btn-default">Update</button>
+                </div>
+            </form>
+        </div>
+    <div class="calender-map"></div>
+    <script type="text/javascript" src="js/calendermap.js"></script>
+    <div id="footer">
+        <div class="center width80">
+        </div>
+    </div>
 </body>
 </html>
