@@ -42,30 +42,44 @@ def distance2():
 	print result
 	return json.dumps(result)
 	
+@app.route('/reachability')
+def reachability():
+	result = []
+	input1 = request.args.get('movie1')
+	input2 = request.args.get('movie2')
+	count = 2
+	queries = [#"MATCH (from:Movie {movieId:{movie1}}), (to:Movie {movieId:{movie2}}) , path = (from)-[r:RATED*0..2]-(to) RETURN r AS relations LIMIT 200",
+				"MATCH (from:Movie {movieId:{movie1}}), (to:Movie {movieId:{movie2}}) , path = (from)-[r:RATED*3..4]-(to) RETURN r AS relations LIMIT 200",
+				"MATCH (from:Movie {movieId:{movie1}}), (to:Movie {movieId:{movie2}}) , path = (from)-[r:RATED*5..6]-(to) RETURN r AS relations LIMIT 200",
+				"MATCH (from:Movie {movieId:{movie1}}), (to:Movie {movieId:{movie2}}) , path = (from)-[r:RATED*7..8]-(to) RETURN r AS relations LIMIT 200"]
+
+	# add CASE
+	for query in queries:
+		for record in graph.cypher.execute(query, parameters={"movie1": int(input1), "movie2": int(input2)}):
+			array = []
+			array.append(count)
+			for x in range(0, len(record.relations)):
+				array.append(record.relations[x].properties['timestamp'])
+			result.append(array)
+		print result[0]
+		count = count +2
+	return json.dumps(result)
 
 @app.route('/centrality')
 def centrality():
-	result = "empty"
-	input1 = request.args.get('movie1')
+	result = []
+	result1 = []
+	result2 = [] 
+	input1 = request.args.get('movie1')	
 	input2 = request.args.get('movie2')
-	query = "MATCH p=allShortestPaths((movie1:Movie {movieId:{movie1}})-[*]-(movie2:Movie {movieId:{movie2}})) RETURN length(p) as length LIMIT 5"
-	for record in graph.cypher.execute(query, parameters={"movie1": int(input1), "movie2": int(input2)}):
-		result = record.length
-		print result
+	query = "MATCH (m:Movie {movieId: {movie}})<-[r:RATED]-(u:User) RETURN round(r.timestamp/(3600*24*30.4167))*(3600*24*30.4167) AS time, count(*) AS count ORDER BY time"
+	for record in graph.cypher.execute(query, parameters={"movie": int(input1)}):
+		result1.append([record.time, record.count])
+	for record in graph.cypher.execute(query, parameters={"movie": int(input2)}):
+		result2.append([record.time, record.count])
+	result.append(result1)
+	result.append(result2)
 	return json.dumps(result)
-
-@app.route('/structure')
-def structure():
-	param = request.args.get('movie1')
-	movie1 = 'Doctor Who (1996)'
-	movie2 = 'Toy Story (1995)'
-	query = "MATCH (u:User)-[r:RATED]->(Movie {title:'Doctor Who (1996)'}) RETURN u.userId AS user LIMIT 10"
-	for record in graph.cypher.execute(query):
-		result = record.user
-		print result
-	#print result
-	# text = neo4j.CypherQuery(graph, query).execute()
-  	return json.dumps(result)
 
 @app.route('/content')
 def content():

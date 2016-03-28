@@ -19,12 +19,12 @@
 #graph_container{
 
 }
-#graph_products{
+#graph1{
     width: 49%;
     float: left;
     border: 1px solid black;
 }
-#graph_movies{
+#graph2{
     width: 49%;
     overflow: hidden;
 
@@ -66,6 +66,22 @@
 
 select option:first-child{
     display:none;
+}
+
+body { font: 12px Arial;}
+
+path { 
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
 }
 
 
