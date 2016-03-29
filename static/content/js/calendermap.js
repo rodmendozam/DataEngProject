@@ -1,6 +1,6 @@
 //https://formden.com/blog/date-picker
-//
-
+//http://eternicode.github.io/bootstrap-datepicker/?markup=input&format=&weekStart=&startDate=&endDate=&startView=0&minViewMode=0&maxViewMode=2&todayBtn=false&clearBtn=false&language=en&orientation=auto&multidate=&multidateSeparator=&keyboardNavigation=on&forceParse=on#sandbox
+//http://www.unixtimestamp.com/index.php
 $(function() {
 
     var start_date_input=$('input[name="start_date"]'); //our date input has the name "date"
