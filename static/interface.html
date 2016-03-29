@@ -1,7 +1,7 @@
 <!doctype html>
 <html ng-app="myAppGraph">
   <head>
-      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
 <!--       <script src="controller_interface.js"></script> -->
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
       <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -11,18 +11,39 @@
   <body>
         <div id="menu">
             <div class="center width80">
-                    <span>Temporal Network Analysis</span>
-                    <button id="content_metrics_button" type="button" class="btn btn-default">Content metrics</button>
-                    <button id="structure_metrics_button" type="button" class="btn btn-default">Structure metrics</button>
+                <span>Temporal Network Analysis</span>
+                <button id="content_metrics_button" type="button" class="btn btn-default">Content metrics</button>
+                <button type="button" id="structure_metrics_button" class="btn btn-default">Structure metrics</button>
             </div>
         </div>
         <div id="controls" ng-controller="formController">
-            <form role="form" id="structure_form" class="form-inline">
+            <form role="form" id="structure_form" >
                 <div id="form_structure" class="form-group">
-                    <label for="movie1">Movie1:</label>
-                    <input type="text" class="form-control" name="movie1">
-                    <label for="movie2">Movie2:</label>
-                    <input type="text" class="form-control" name="movie2">
+                    <label for="selector">Select which metric you would like to see.</label>
+                    <select class="form-control placeholder" name="select_metric" id="select_metric">
+                        <option value="">Select one option here.</option>
+                        <option value="reachability">Reachability</option>
+                        <option value="centrality">Degree Centrality</option>
+                    </select>
+
+                    <label for="selector">Select a first movie.</label>
+                    <select class="form-control placeholder"
+                            ng-model="selectedMovie1" 
+                            name = "first_movie"
+                            id = "first_movie"
+                            ng-options="item.title for item in movies1 track by item.id">
+                        <option value="">Select one option here.</option>
+                    </select>
+
+                    <label for="selector">Select a second movie.</label>
+                    <select class="form-control placeholder"
+                            ng-model="selectedMovie2" 
+                            name = "second_movie"
+                            id = "second_movie"
+                            ng-options="item.title for item in movies2 track by item.id">
+                        <option value="">Select one option here.</option>
+                    </select>
+
                     <button type="submit" class="btn btn-default">Submit</button>
                 </div>
             </form>
@@ -45,10 +66,10 @@
             </form>
         </div>
         <div id="graph_container" class="center height_graph">
-            <div id="graph_products" class="height_graph">
+            <div id="graph1" class="height_graph">
 
             </div>
-            <div id="graph_movies" class="height_graph">
+            <div id="graph2" class="height_graph">
 
             </div>
         </div>
@@ -57,7 +78,9 @@
 
             </div>
         </div>
-         <script src="js/controller.js"></script>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="js/controller.js"></script>
+
 
   </body>
 </html>

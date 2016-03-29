@@ -1,6 +1,7 @@
 #!flask/bin/python
-from flask import Flask, send_from_directory, request, jsonify, render_template, make_response, Response
-from py2neo import authenticate, Graph
+from flask import Flask, send_from_directory, request, jsonify
+from py2neo import authenticate, cypher, neo4j, Graph
+from py2neo.packages.httpstream import http
 import json
 import numpy as np
 import cStringIO
@@ -15,10 +16,10 @@ import StringIO
 from datetime import datetime
 
 app = Flask(__name__, static_url_path='')
+http.socket_timeout = 9999
 
 # set up authentication parameters
-authenticate("localhost:7474", "neo4j", "dataeng123=")
-
+authenticate("localhost:7474", "neo4j", "givemegraphs")
 # connect to authenticated graph database
 graph = Graph("http://localhost:7474/db/data/")
 
@@ -34,21 +35,65 @@ def send_js(path):
 def send_css(path):
   return send_from_directory('static/css', path)
 
+@app.route('/static/data/<path:path>')
+def send_json(path):
+	return send_from_directory('static/data', path)
 
 # API calls
 @app.route('/temporal_distance')
 def distance2():
-  return "Do something with temporal distance"
+	result = []
+	input1 = request.args.get('movie1')
+	input2 = request.args.get('movie2')
+
+	# add CASE
+	query = "MATCH (from:Movie {movieId:{movie1}}), (to:Movie {movieId:{movie2}}) , path = (from)-[r:RATED*0..2]-(to) RETURN r AS relations LIMIT 100"	
+	for record in graph.cypher.execute(query, parameters={"movie1": int(input1), "movie2": int(input2)}):
+		array = []
+		for x in range(0, len(record.relations)):
+			array.append(record.relations[x].properties['timestamp'])
+		result.append(array)
+	print result
+	return json.dumps(result)
+	
+@app.route('/reachability')
+def reachability():
+	result = []
+	input1 = request.args.get('movie1')
+	input2 = request.args.get('movie2')
+	count = 2
+	queries = [#"MATCH (from:Movie {movieId:{movie1}}), (to:Movie {movieId:{movie2}}) , path = (from)-[r:RATED*0..2]-(to) RETURN r AS relations LIMIT 200",
+				"MATCH (from:Movie {movieId:{movie1}}), (to:Movie {movieId:{movie2}}) , path = (from)-[r:RATED*3..4]-(to) RETURN r AS relations LIMIT 200",
+				"MATCH (from:Movie {movieId:{movie1}}), (to:Movie {movieId:{movie2}}) , path = (from)-[r:RATED*5..6]-(to) RETURN r AS relations LIMIT 200",
+				"MATCH (from:Movie {movieId:{movie1}}), (to:Movie {movieId:{movie2}}) , path = (from)-[r:RATED*7..8]-(to) RETURN r AS relations LIMIT 200"]
+
+	# add CASE
+	for query in queries:
+		for record in graph.cypher.execute(query, parameters={"movie1": int(input1), "movie2": int(input2)}):
+			array = []
+			array.append(count)
+			for x in range(0, len(record.relations)):
+				array.append(record.relations[x].properties['timestamp'])
+			result.append(array)
+		print result[0]
+		count = count +2
+	return json.dumps(result)
 
 @app.route('/centrality')
 def centrality():
-  return "Maybe some centrality metric"
-
-@app.route('/structure')
-def structure():
-	result = request.args.get('movie1')
-	print result
-  	return json.dumps(result)
+	result = []
+	result1 = []
+	result2 = [] 
+	input1 = request.args.get('movie1')	
+	input2 = request.args.get('movie2')
+	query = "MATCH (m:Movie {movieId: {movie}})<-[r:RATED]-(u:User) RETURN round(r.timestamp/(3600*24*30.4167))*(3600*24*30.4167) AS time, count(*) AS count ORDER BY time"
+	for record in graph.cypher.execute(query, parameters={"movie": int(input1)}):
+		result1.append([record.time, record.count])
+	for record in graph.cypher.execute(query, parameters={"movie": int(input2)}):
+		result2.append([record.time, record.count])
+	result.append(result1)
+	result.append(result2)
+	return json.dumps(result)
 
 
 @app.route('/content/')
