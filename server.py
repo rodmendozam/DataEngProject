@@ -19,7 +19,9 @@ app = Flask(__name__, static_url_path='')
 http.socket_timeout = 9999
 
 # set up authentication parameters
-authenticate("localhost:7474", "neo4j", "givemegraphs")
+# authenticate("localhost:7474", "neo4j", "givemegraphs")
+authenticate("localhost:7474", "neo4j", "dataeng123=")
+
 # connect to authenticated graph database
 graph = Graph("http://localhost:7474/db/data/")
 
@@ -86,7 +88,7 @@ def centrality():
 	result2 = [] 
 	input1 = request.args.get('movie1')	
 	input2 = request.args.get('movie2')
-	query = "MATCH (m:Movie {movieId: {movie}})<-[r:RATED]-(u:User) RETURN round(r.timestamp/(3600*24*30.4167))*(3600*24*30.4167) AS time, count(*) AS count ORDER BY time"
+	query = "MATCH (m:Movie {movieId: {movie}})<-[r:EDITED]-(u:User) RETURN round(r.` timestamp`/(3600*24*30.4167))*(3600*24*30.4167) AS time, count(*) AS count ORDER BY time"
 	for record in graph.cypher.execute(query, parameters={"movie": int(input1)}):
 		result1.append([record.time, record.count])
 	for record in graph.cypher.execute(query, parameters={"movie": int(input2)}):

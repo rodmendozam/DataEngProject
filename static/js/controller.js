@@ -30,13 +30,17 @@ app_graph.controller('formController', function($scope, $http) {
 
     $http({
             method: 'GET',
-            url: 'static/data/submovies.json'
+            url: 'static/data/movies.json'
         }).success(function (result) {
         $scope.movies1 = $scope.movies2 = result;
     });
 
 
     $('#structure_form').on('submit', function(e){
+
+        $('div#graph1').empty();
+        $('div#graph2').empty();
+
         e.preventDefault();
         var select = "none"
         select = $(this).find('#select_metric').val();
@@ -147,6 +151,10 @@ app_graph.controller('formController', function($scope, $http) {
     }
 
     function graphLine(data, selector) {//Works with 2d array
+
+        //$('div#graph1').empty();
+        //$('div#graph2').empty();
+
       // Set the dimensions of the canvas / graph
       var margin = {top: 50, right: 20, bottom: 30, left: 150},
           width = 600 - margin.left - margin.right,

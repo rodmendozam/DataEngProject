@@ -30,9 +30,15 @@ $(function() {
         var start_date_split = start_date_input.val().split("-");
         var start_date_form = start_date_split[2]+start_date_split[1]+start_date_split[0];
 
+        //console.log(start_date_form);
+        //parseInt(start_date_split[2]), parseInt(end_date_split[2])
+        //console.log('Year of start date is: ' + parseInt(start_date_split[2]));
         var end_date_split = end_date_input.val().split("-");
         var end_date_form = end_date_split[2]+end_date_split[1]+end_date_split[0];
 
+        var year_start = parseInt(start_date_split[2]);
+        var year_end = parseInt(end_date_split[2]) + 1;
+        //console.log('Year start: ' + year_start + 'Year end: ' + year_end);
         //var end_date_form = $('#end_date').val();
 
         console.log('movie title has: ' + movie_title_form);
@@ -66,7 +72,7 @@ $(function() {
             .domain([0, 1])
 
         var svg = d3.select(".calender-map").selectAll("svg")
-            .data(d3.range(1996, 2017))
+            .data(d3.range(year_start, year_end))
           .enter().append("svg")
             .attr("width", '100%')
             .attr("data-height", '0.5678')
@@ -137,9 +143,10 @@ $(function() {
 
             for (i = 0; i < size_data; i++) {
                 results[my_dates[i]] = Math.sqrt(my_values[i] / max);
+                //results[my_dates[i]] = my_values[i] / max;
                 //console.log(Math.sqrt(my_values[i] / max));
                 if(my_values[i] / max == 1){
-                    console.log('Hay max el dia: ' + my_dates[i] + 'con el valor de: ' + my_values[i]);
+                    console.log('Max day is: ' + my_dates[i] + 'with value of: ' + my_values[i]);
                 }
             }
             //console.log(results);
