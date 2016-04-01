@@ -96,6 +96,17 @@ app_graph.controller('formController', function($scope, $http) {
       
     }
 
+    function parseDistance(dataset) {    
+    var result = [];  
+      for(var d = 0; d < dataset.length; d++) {
+        value = dataset[d][1]
+        date = new Date(dataset[d][0]*1000);
+        result.push([date, value]);
+      }
+      console.log("After parsing: " + result)
+      graphLine(result, "#graph1");
+    }
+
     function parseReachability(dataset) {
       result = [];
        
@@ -123,31 +134,10 @@ app_graph.controller('formController', function($scope, $http) {
       for(var m = 0; m < min.length; m++) {
         date = new Date(min[m][1]*1000);
         day = new Date(date.setHours(0,0,0,0));
-        result.push([min[m][0], day]);
+        result.push([day, min[m][0]]);
       }     
 
       graphLine(result, "#graph1");
-    }
-
-    function parseDistance(dataset) {
-      result = [];
-      for(var i = 0; i < dataset.length; i++) {
-        entry = dataset[i]
-        var max = 0;
-        for(var j = 0; j < entry.length; j++) {
-          if(entry[j] > max){
-            max = entry[j]
-          }
-        }
-        date = new Date(max*1000);
-        day = new Date(date.setHours(0,0,0,0));
-        result.push([day, Math.floor(Math.random()*2)]);
-      }
-      result.sort(function(x,y) {
-        return x[0] - y[0]
-      })
-      console.log(result[0]);
-      graphLine(result);
     }
 
     function graphLine(data, selector) {//Works with 2d array

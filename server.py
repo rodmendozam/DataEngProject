@@ -49,13 +49,10 @@ def distance2():
 	input2 = request.args.get('movie2')
 
 	# add CASE
-	query = "MATCH (from:Movie {movieId:{movie1}}), (to:Movie {movieId:{movie2}}) , path = (from)-[r:RATED*0..2]-(to) RETURN r AS relations LIMIT 100"	
-	for record in graph.cypher.execute(query, parameters={"movie1": int(input1), "movie2": int(input2)}):
-		array = []
-		for x in range(0, len(record.relations)):
-			array.append(record.relations[x].properties['timestamp'])
-		result.append(array)
-	print result
+	query = "MATCH (m:Movie),(n:Movie), p = shortestPath((m)-[r:RATED*..8]-(n)) WHERE ((m.movieId < 3999 AND m.movieId > 3973 AND n.movieId < 3999 AND n.movieId > 3973) OR (m.movieId < 4036 AND m.movieId > 4013 AND n.movieId < 4036 AND n.movieId > 4013)) AND m.movieId <> n.movieId  RETURN round((r[1]).timestamp/(3600*24*30.4167))*(3600*24*30.4167) AS time, count(p) AS count ORDER BY time"	
+	for record in graph.cypher.execute(query):
+		result.append([record.time, record.count])
+	
 	return json.dumps(result)
 	
 @app.route('/reachability')
@@ -88,7 +85,7 @@ def centrality():
 	result2 = [] 
 	input1 = request.args.get('movie1')	
 	input2 = request.args.get('movie2')
-	query = "MATCH (m:Movie {movieId: {movie}})<-[r:EDITED]-(u:User) RETURN round(r.` timestamp`/(3600*24*30.4167))*(3600*24*30.4167) AS time, count(*) AS count ORDER BY time"
+	query = "MATCH (m:Movie {movieId: {movie}})<-[r:RATED]-(u:User) RETURN round(r.timestamp/(3600*24*30.4167))*(3600*24*30.4167) AS time, count(*) AS count ORDER BY time"
 	for record in graph.cypher.execute(query, parameters={"movie": int(input1)}):
 		result1.append([record.time, record.count])
 	for record in graph.cypher.execute(query, parameters={"movie": int(input2)}):
